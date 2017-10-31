@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <string.h>
 #include <vm.h>
 
 #define PUSH(vm, v) (vm)->stack[(vm)->sp++] = (v) /* push v onto data stack */
@@ -58,6 +59,43 @@
 	(v) |= ((buf) << 48); \
 	(buf) = POP((vm)); \
 	(v) |= ((buf) << 56)
+
+static uint32_t serialize_float(float x)
+{
+	uint32_t ret, xx;
+	uint8_t b;
+	size_t i;
+	size_t len = sizeof(float);
+
+	memcpy(&xx, &x, len);
+
+	ret = 0;
+	for (i=0; i<len; ++i) {
+		b = (xx >> (8*i)) & 0xFF;
+		ret |= b << ((len - 1 - i) * 8);
+	}
+
+	return ret;
+}
+
+static float deserialize_float(uint32_t x)
+{
+	uint32_t xx;
+	uint8_t b;
+	float ret;
+	size_t i;
+	size_t len = sizeof(float);
+
+	xx = 0;
+	for (i=0; i<len; ++i) {
+		b = (x >> 8*i) & 0xFF;
+		xx |= b << ((len - 1 - i) * 8);
+	}
+
+	memcpy(&ret, &xx, len);
+
+	return ret;
+}
 
 struct VM {
 	uint8_t *env; /* variable env */
