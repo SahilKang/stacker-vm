@@ -259,6 +259,20 @@ int run_vm(VM *vm, uint8_t *code, size_t pc)
 			ret = a + b;
 
 			PUSH_64(vm, ret);
+		} else if (opcode == ADD_f) {
+			uint32_t a, b, c, buf;
+			float aa, bb, cc;
+
+			POP_32(vm, b, buf);
+			POP_32(vm, a, buf);
+
+			aa = deserialize_float(a);
+			bb = deserialize_float(b);
+			cc = aa + bb;
+
+			c = serialize_float(cc);
+
+			PUSH_32(vm, c);
 		}
 	}
 }
