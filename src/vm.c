@@ -97,6 +97,43 @@ static float deserialize_float(uint32_t x)
 	return ret;
 }
 
+static uint64_t serialize_double(double x)
+{
+	uint64_t ret, xx;
+	uint8_t b;
+	size_t i;
+	size_t len = sizeof(double);
+
+	memcpy(&xx, &x, len);
+
+	ret = 0;
+	for (i=0; i<len; ++i) {
+		b = (xx >> (8*i)) & 0xFF;
+		ret |= b << ((len - 1 - i) * 8);
+	}
+
+	return ret;
+}
+
+static double deserialize_double(uint64_t x)
+{
+	uint64_t xx;
+	uint8_t b;
+	double ret;
+	size_t i;
+	size_t len = sizeof(double);
+
+	xx = 0;
+	for (i=0; i<len; ++i) {
+		b = (x >> 8*i) & 0xFF;
+		xx |= b << ((len - 1 - i) * 8);
+	}
+
+	memcpy(&ret, &xx, len);
+
+	return ret;
+}
+
 struct VM {
 	uint8_t *env; /* variable env */
 

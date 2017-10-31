@@ -1,2 +1,2 @@
 # stacker-vm
-### Simple stack based virutal machine
+### Simple stack based virtual machine
