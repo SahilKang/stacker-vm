@@ -65,6 +65,113 @@
 	(buf) = POP((vm)); \
 	(v) |= ((buf) << 56)
 
+#define BINARY_u8(vm, op) \
+	uint8_t b = POP((vm)); \
+	uint8_t a = POP((vm)); \
+	uint16_t ret  = a op b; \
+\
+	PUSH_16((vm), ret)
+
+#define BINARY_i8(vm, op) \
+	int8_t b = POP((vm)); \
+	int8_t a = POP((vm)); \
+	int16_t ret = a op b; \
+\
+	PUSH_16((vm), ret)
+
+#define BINARY_u16(vm, op) \
+	uint16_t a, b; \
+	uint16_t buf; \
+	uint32_t ret; \
+\
+	POP_16((vm), b, buf); \
+	POP_16((vm), a, buf); \
+	ret = a op b; \
+\
+	PUSH_32((vm), ret)
+
+#define BINARY_i16(vm, op) \
+	int16_t a, b; \
+	uint16_t buf; \
+	int32_t ret; \
+\
+	POP_16((vm), b, buf); \
+	POP_16((vm), a, buf); \
+	ret = a op b; \
+\
+	PUSH_32((vm), ret)
+
+#define BINARY_u32(vm, op) \
+	uint32_t a, b; \
+	uint32_t buf; \
+	uint64_t ret; \
+\
+	POP_32((vm), b, buf); \
+	POP_32((vm), a, buf); \
+	ret = a op b; \
+\
+	PUSH_64((vm), ret)
+
+#define BINARY_i32(vm, op) \
+	int32_t a, b; \
+	uint32_t buf; \
+	int64_t ret; \
+\
+	POP_32((vm), b, buf); \
+	POP_32((vm), a, buf); \
+	ret = a op b; \
+\
+	PUSH_64((vm), ret)
+
+#define BINARY_u64(vm, op) \
+	uint64_t a, b, buf, ret; \
+\
+	POP_64((vm), b, buf); \
+	POP_64((vm), a, buf); \
+	ret = a op b; \
+\
+	PUSH_64((vm), ret)
+
+#define BINARY_i64(vm, op) \
+	int64_t a, b, ret; \
+	uint64_t buf; \
+\
+	POP_64((vm), b, buf); \
+	POP_64((vm), a, buf); \
+	ret = a op b; \
+\
+	PUSH_64((vm), ret)
+
+#define BINARY_f(vm, op) \
+	uint32_t a, b, c, buf; \
+	float aa, bb, cc; \
+\
+	POP_32((vm), b, buf); \
+	POP_32((vm), a, buf); \
+\
+	aa = deserialize_float(a); \
+	bb = deserialize_float(b); \
+	cc = aa op bb; \
+\
+	c = serialize_float(cc); \
+\
+	PUSH_32((vm), c)
+
+#define BINARY_d(vm, op) \
+	uint64_t a, b, c, buf; \
+	double aa, bb, cc; \
+\
+	POP_64((vm), b, buf); \
+	POP_64((vm), a, buf); \
+\
+	aa = deserialize_double(a); \
+	bb = deserialize_double(b); \
+	cc = aa op bb; \
+\
+	c = serialize_double(cc); \
+\
+	PUSH_64((vm), c)
+
 static uint32_t serialize_float(float x)
 {
 	uint32_t ret, xx;
@@ -196,102 +303,25 @@ int run_vm(VM *vm, uint8_t *code, size_t pc)
 		opcode = GETCODE(vm); /* get next instruction */
 
 		if (opcode == ADD_u8) {
-			uint8_t b = POP(vm);
-			uint8_t a = POP(vm);
-			uint16_t ret  = a + b;
-
-			PUSH_16(vm, ret);
+			BINARY_u8(vm, +);
 		} else if (opcode == ADD_i8) {
-			int8_t b = POP(vm);
-			int8_t a = POP(vm);
-			int16_t ret = a + b;
-
-			PUSH_16(vm, ret);
+			BINARY_i8(vm, +);
 		} else if (opcode == ADD_u16) {
-			uint16_t a, b;
-			uint16_t buf;
-			uint32_t ret;
-
-			POP_16(vm, b, buf);
-			POP_16(vm, a, buf);
-			ret = a + b;
-
-			PUSH_32(vm, ret);
+			BINARY_u16(vm, +);
 		} else if (opcode == ADD_i16) {
-			int16_t a, b;
-			uint16_t buf;
-			int32_t ret;
-
-			POP_16(vm, b, buf);
-			POP_16(vm, a, buf);
-			ret = a + b;
-
-			PUSH_32(vm, ret);
+			BINARY_i16(vm, +);
 		} else if (opcode == ADD_u32) {
-			uint32_t a, b;
-			uint32_t buf;
-			uint64_t ret;
-
-			POP_32(vm, b, buf);
-			POP_32(vm, a, buf);
-			ret = a + b;
-
-			PUSH_64(vm, ret);
+			BINARY_u32(vm, +);
 		} else if (opcode == ADD_i32) {
-			int32_t a, b;
-			uint32_t buf;
-			int64_t ret;
-
-			POP_32(vm, b, buf);
-			POP_32(vm, a, buf);
-			ret = a + b;
-
-			PUSH_64(vm, ret);
+			BINARY_i32(vm, +);
 		} else if (opcode == ADD_u64) {
-			uint64_t a, b, buf, ret;
-
-			POP_64(vm, b, buf);
-			POP_64(vm, a, buf);
-			ret = a + b;
-
-			PUSH_64(vm, ret);
+			BINARY_u64(vm, +);
 		} else if (opcode == ADD_i64) {
-			int64_t a, b, ret;
-			uint64_t buf;
-
-			POP_64(vm, b, buf);
-			POP_64(vm, a, buf);
-			ret = a + b;
-
-			PUSH_64(vm, ret);
+			BINARY_i64(vm, +);
 		} else if (opcode == ADD_f) {
-			uint32_t a, b, c, buf;
-			float aa, bb, cc;
-
-			POP_32(vm, b, buf);
-			POP_32(vm, a, buf);
-
-			aa = deserialize_float(a);
-			bb = deserialize_float(b);
-			cc = aa + bb;
-
-			c = serialize_float(cc);
-
-			PUSH_32(vm, c);
+			BINARY_f(vm, +);
 		} else if (opcode == ADD_d) {
-			uint64_t a, b, c, buf;
-			double aa, bb, cc;
-
-			POP_64(vm, b, buf);
-			POP_64(vm, a, buf);
-
-			aa = deserialize_double(a);
-			bb = deserialize_double(b);
-			cc = aa + bb;
-
-			c = serialize_double(cc);
-
-			PUSH_64(vm, c);
+			BINARY_d(vm, +);
 		}
 	}
 }
