@@ -32,18 +32,14 @@
 #define PUSH_32(vm, v) \
 	PUSH((vm), ((v) >> 24) & 0xFF); \
 	PUSH((vm), ((v) >> 16) & 0xFF); \
-	PUSH((vm), ((v) >> 8) & 0xFF); \
-	PUSH((vm), (v) & 0xFF)
+	PUSH_16((vm), (v))
 
 #define PUSH_64(vm, v) \
 	PUSH((vm), ((v) >> 56) & 0xFF); \
 	PUSH((vm), ((v) >> 48) & 0xFF); \
 	PUSH((vm), ((v) >> 40) & 0xFF); \
 	PUSH((vm), ((v) >> 32) & 0xFF); \
-	PUSH((vm), ((v) >> 24) & 0xFF); \
-	PUSH((vm), ((v) >> 16) & 0xFF); \
-	PUSH((vm), ((v) >> 8) & 0xFF); \
-	PUSH((vm), (v) & 0xFF)
+	PUSH_32((vm), (v))
 
 #define POP_16(vm, v, buf) \
 	(buf) = POP((vm)); \
@@ -52,24 +48,14 @@
 	(v) |= ((buf) << 8)
 
 #define POP_32(vm, v, buf) \
-	(buf) = POP((vm)); \
-	(v) = (buf); \
-	(buf) = POP((vm)); \
-	(v) |= ((buf) << 8); \
+	POP_16((vm), (v), (buf)); \
 	(buf) = POP((vm)); \
 	(v) |= ((buf) << 16); \
 	(buf) = POP((vm)); \
 	(v) |= ((buf) << 24)
 
 #define POP_64(vm, v, buf) \
-	(buf) = POP((vm)); \
-	(v) = (buf); \
-	(buf) = POP((vm)); \
-	(v) |= ((buf) << 8); \
-	(buf) = POP((vm)); \
-	(v) |= ((buf) << 16); \
-	(buf) = POP((vm)); \
-	(v) |= ((buf) << 24); \
+	POP_32((vm), (v), (buf)); \
 	(buf) = POP((vm)); \
 	(v) |= ((buf) << 32); \
 	(buf) = POP((vm)); \
