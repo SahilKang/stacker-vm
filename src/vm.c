@@ -322,6 +322,26 @@ int run_vm(VM *vm, uint8_t *code, size_t pc)
 			BINARY_f(vm, +);
 		} else if (opcode == ADD_d) {
 			BINARY_d(vm, +);
+		} else if (opcode == SUB_u8) {
+			BINARY_u8(vm, -);
+		} else if (opcode == SUB_i8) {
+			BINARY_i8(vm, -);
+		} else if (opcode == SUB_u16) {
+			BINARY_u16(vm, -);
+		} else if (opcode == SUB_i16) {
+			BINARY_i16(vm, -);
+		} else if (opcode == SUB_u32) {
+			BINARY_u32(vm, -);
+		} else if (opcode == SUB_i32) {
+			BINARY_i32(vm, -);
+		} else if (opcode == SUB_u64) {
+			BINARY_u64(vm, -);
+		} else if (opcode == SUB_i64) {
+			BINARY_i64(vm, -);
+		} else if (opcode == SUB_f) {
+			BINARY_f(vm, -);
+		} else if (opcode == SUB_d) {
+			BINARY_d(vm, -);
 		}
 	}
 }
