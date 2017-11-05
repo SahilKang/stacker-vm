@@ -65,6 +65,13 @@
 	(buf) = POP((vm)); \
 	(v) |= ((buf) << 56)
 
+#define BINARY_u8(vm, op) \
+	uint8_t b = POP((vm)); \
+	uint8_t a = POP((vm)); \
+	uint8_t ret  = a op b; \
+\
+	PUSH((vm), ret)
+
 /* PROM for promote: we promote the u8 size to u16 on return */
 #define BINARY_u8_PROM(vm, op) \
 	uint8_t b = POP((vm)); \
@@ -73,10 +80,28 @@
 \
 	PUSH_16((vm), ret)
 
+#define BINARY_i8(vm, op) \
+	int8_t b = POP((vm)); \
+	int8_t a = POP((vm)); \
+	int8_t ret = a op b; \
+\
+	PUSH((vm), ret)
+
 #define BINARY_i8_PROM(vm, op) \
 	int8_t b = POP((vm)); \
 	int8_t a = POP((vm)); \
 	int16_t ret = a op b; \
+\
+	PUSH_16((vm), ret)
+
+#define BINARY_u16(vm, op) \
+	uint16_t a, b; \
+	uint16_t buf; \
+	uint16_t ret; \
+\
+	POP_16((vm), b, buf); \
+	POP_16((vm), a, buf); \
+	ret = a op b; \
 \
 	PUSH_16((vm), ret)
 
@@ -91,6 +116,17 @@
 \
 	PUSH_32((vm), ret)
 
+#define BINARY_i16(vm, op) \
+	int16_t a, b; \
+	uint16_t buf; \
+	int16_t ret; \
+\
+	POP_16((vm), b, buf); \
+	POP_16((vm), a, buf); \
+	ret = a op b; \
+\
+	PUSH_16((vm), ret)
+
 #define BINARY_i16_PROM(vm, op) \
 	int16_t a, b; \
 	uint16_t buf; \
@@ -98,6 +134,17 @@
 \
 	POP_16((vm), b, buf); \
 	POP_16((vm), a, buf); \
+	ret = a op b; \
+\
+	PUSH_32((vm), ret)
+
+#define BINARY_u32(vm, op) \
+	uint32_t a, b; \
+	uint32_t buf; \
+	uint32_t ret; \
+\
+	POP_32((vm), b, buf); \
+	POP_32((vm), a, buf); \
 	ret = a op b; \
 \
 	PUSH_32((vm), ret)
@@ -112,6 +159,17 @@
 	ret = a op b; \
 \
 	PUSH_64((vm), ret)
+
+#define BINARY_i32(vm, op) \
+	int32_t a, b; \
+	uint32_t buf; \
+	int32_t ret; \
+\
+	POP_32((vm), b, buf); \
+	POP_32((vm), a, buf); \
+	ret = a op b; \
+\
+	PUSH_32((vm), ret)
 
 #define BINARY_i32_PROM(vm, op) \
 	int32_t a, b; \
