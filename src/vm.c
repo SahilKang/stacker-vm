@@ -984,6 +984,13 @@ int run_vm(VM *vm, uint8_t *code, size_t pc)
 			vm->sp -= argc;
 
 			PUSH(vm, val);
+		} else if (opcode == ARGC) {
+			uint8_t argc = vm->fp - 64*2 - 1;
+			PUSH(vm, argc);
+		} else if (opcode == ARG) {
+			uint8_t arg_num = POP(vm);
+			uint8_t arg = vm->stack[vm->fp - 64*2 - 1 - arg_num];
+			PUSH(vm, arg);
 		}
 	}
 }

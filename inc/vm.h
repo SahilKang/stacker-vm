@@ -219,7 +219,7 @@ enum opcode {
 	RET_u64 = 0xA8,
 
 	ARGC = 0xA9,
-	ARGV = 0xAA,
+	ARG = 0xAA,
 
 	HALT = 0xAB,
 
