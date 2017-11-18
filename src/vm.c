@@ -231,6 +231,115 @@
 \
 	PUSH_64((vm), c)
 
+/* REL for relational operator */
+#define REL_u8(vm, op) \
+	uint8_t b = POP((vm)); \
+	uint8_t a = POP((vm)); \
+	uint8_t ret = a op b ? 1 : 0; \
+\
+	PUSH((vm), ret)
+
+#define REL_i8(vm, op) \
+	int8_t b = POP((vm)); \
+	int8_t a = POP((vm)); \
+	uint8_t ret = a op b ? 1 : 0; \
+\
+	PUSH((vm), ret)
+
+#define REL_u16(vm, op) \
+	uint16_t a, b; \
+	uint16_t buf; \
+	uint8_t ret; \
+\
+	POP_16((vm), b, buf); \
+	POP_16((vm), a, buf); \
+	ret = a op b ? 1 : 0; \
+\
+	PUSH((vm), ret)
+
+#define REL_i16(vm, op) \
+	int16_t a, b; \
+	uint16_t buf; \
+	uint8_t ret; \
+\
+	POP_16((vm), b, buf); \
+	POP_16((vm), a, buf); \
+	ret = a op b ? 1 : 0; \
+\
+	PUSH((vm), ret)
+
+#define REL_u32(vm, op) \
+	uint32_t a, b; \
+	uint32_t buf; \
+	uint8_t ret; \
+\
+	POP_32((vm), b, buf); \
+	POP_32((vm), a, buf); \
+	ret = a op b ? 1 : 0; \
+\
+	PUSH((vm), ret)
+
+#define REL_i32(vm, op) \
+	int32_t a, b; \
+	uint32_t buf; \
+	uint8_t ret; \
+\
+	POP_32((vm), b, buf); \
+	POP_32((vm), a, buf); \
+	ret = a op b ? 1 : 0; \
+\
+	PUSH((vm), ret)
+
+#define REL_u64(vm, op) \
+	uint64_t a, b; \
+	uint64_t buf; \
+	uint8_t ret; \
+\
+	POP_64((vm), b, buf); \
+	POP_64((vm), a, buf); \
+	ret = a op b ? 1 : 0; \
+\
+	PUSH((vm), ret)
+
+#define REL_i64(vm, op) \
+	int64_t a, b; \
+	uint64_t buf; \
+	uint8_t ret; \
+\
+	POP_64((vm), b, buf); \
+	POP_64((vm), a, buf); \
+	ret = a op b ? 1 : 0; \
+\
+	PUSH((vm), ret)
+
+#define REL_f(vm, op) \
+	uint32_t a, b, buf; \
+	float aa, bb; \
+	uint8_t ret; \
+\
+	POP_32((vm), b, buf); \
+	POP_32((vm), a, buf); \
+\
+	aa = deserialize_float(a); \
+	bb = deserialize_float(b); \
+	ret = aa op bb ? 1 : 0; \
+\
+	PUSH((vm), ret)
+
+#define REL_d(vm, op) \
+	uint64_t a, b, buf; \
+	double aa, bb; \
+	uint8_t ret; \
+\
+	POP_64((vm), b, buf); \
+	POP_64((vm), a, buf); \
+\
+	aa = deserialize_double(a); \
+	bb = deserialize_double(b); \
+	ret = aa op bb ? 1 : 0; \
+\
+	PUSH((vm), ret)
+
 static uint32_t serialize_float(float x)
 {
 	uint32_t ret, xx;
@@ -457,6 +566,110 @@ int run_vm(VM *vm, uint8_t *code, size_t pc)
 			BINARY_u64(vm, %);
 		} else if (opcode == MOD_i64) {
 			BINARY_i64(vm, %);
+		} else if (opcode == EQ_u8) {
+			REL_u8(vm, ==);
+		} else if (opcode == EQ_u16) {
+			REL_u16(vm, ==);
+		} else if (opcode == EQ_u32) {
+			REL_u32(vm, ==);
+		} else if (opcode == EQ_u64) {
+			REL_u64(vm, ==);
+		} else if (opcode == EQ_f) {
+			REL_f(vm, ==);
+		} else if (opcode == EQ_d) {
+			REL_d(vm, ==);
+		} else if (opcode == NEQ_u8) {
+			REL_u8(vm, !=);
+		} else if (opcode == NEQ_u16) {
+			REL_u16(vm, !=);
+		} else if (opcode == NEQ_u32) {
+			REL_u32(vm, !=);
+		} else if (opcode == NEQ_u64) {
+			REL_u64(vm, !=);
+		} else if (opcode == NEQ_f) {
+			REL_f(vm, !=);
+		} else if (opcode == NEQ_d) {
+			REL_d(vm, !=);
+		} else if (opcode == LT_u8) {
+			REL_u8(vm, <);
+		} else if (opcode == LT_i8) {
+			REL_i8(vm, <);
+		} else if (opcode == LT_u16) {
+			REL_u16(vm, <);
+		} else if (opcode == LT_i16) {
+			REL_i16(vm, <);
+		} else if (opcode == LT_u32) {
+			REL_u32(vm, <);
+		} else if (opcode == LT_i32) {
+			REL_i32(vm, <);
+		} else if (opcode == LT_u64) {
+			REL_u64(vm, <);
+		} else if (opcode == LT_i64) {
+			REL_i64(vm, <);
+		} else if (opcode == LT_f) {
+			REL_f(vm, <);
+		} else if (opcode == LT_d) {
+			REL_d(vm, <);
+		} else if (opcode == LTEQ_u8) {
+			REL_u8(vm, <=);
+		} else if (opcode == LTEQ_i8) {
+			REL_i8(vm, <=);
+		} else if (opcode == LTEQ_u16) {
+			REL_u16(vm, <=);
+		} else if (opcode == LTEQ_i16) {
+			REL_i16(vm, <=);
+		} else if (opcode == LTEQ_u32) {
+			REL_u32(vm, <=);
+		} else if (opcode == LTEQ_i32) {
+			REL_i32(vm, <=);
+		} else if (opcode == LTEQ_u64) {
+			REL_u64(vm, <=);
+		} else if (opcode == LTEQ_i64) {
+			REL_i64(vm, <=);
+		} else if (opcode == LTEQ_f) {
+			REL_f(vm, <=);
+		} else if (opcode == LTEQ_d) {
+			REL_d(vm, <=);
+		} else if (opcode == GT_u8) {
+			REL_u8(vm, >);
+		} else if (opcode == GT_i8) {
+			REL_i8(vm, >);
+		} else if (opcode == GT_u16) {
+			REL_u16(vm, >);
+		} else if (opcode == GT_i16) {
+			REL_i16(vm, >);
+		} else if (opcode == GT_u32) {
+			REL_u32(vm, >);
+		} else if (opcode == GT_i32) {
+			REL_i32(vm, >);
+		} else if (opcode == GT_u64) {
+			REL_u64(vm, >);
+		} else if (opcode == GT_i64) {
+			REL_i64(vm, >);
+		} else if (opcode == GT_f) {
+			REL_f(vm, >);
+		} else if (opcode == GT_d) {
+			REL_d(vm, >);
+		} else if (opcode == GTEQ_u8) {
+			REL_u8(vm, >=);
+		} else if (opcode == GTEQ_i8) {
+			REL_i8(vm, >=);
+		} else if (opcode == GTEQ_u16) {
+			REL_u16(vm, >=);
+		} else if (opcode == GTEQ_i16) {
+			REL_i16(vm, >=);
+		} else if (opcode == GTEQ_u32) {
+			REL_u32(vm, >=);
+		} else if (opcode == GTEQ_i32) {
+			REL_i32(vm, >=);
+		} else if (opcode == GTEQ_u64) {
+			REL_u64(vm, >=);
+		} else if (opcode == GTEQ_i64) {
+			REL_i64(vm, >=);
+		} else if (opcode == GTEQ_f) {
+			REL_f(vm, >=);
+		} else if (opcode == GTEQ_d) {
+			REL_d(vm, >=);
 		}
 	}
 }

@@ -86,24 +86,16 @@ enum opcode {
 	MOD_i64 = 0x30,
 
 	EQ_u8 = 0x31,
-	EQ_i8 = 0x32,
 	EQ_u16 = 0x33,
-	EQ_i16 = 0x34,
 	EQ_u32 = 0x35,
-	EQ_i32 = 0x36,
 	EQ_u64 = 0x37, /* equal-to uint64_t */
-	EQ_i64 = 0x38,
 	EQ_f = 0x39, /* equal-to float */
 	EQ_d = 0x3A, /* less than double */
 
 	NEQ_u8 = 0x3B,
-	NEQ_i8 = 0x3C,
 	NEQ_u16 = 0x3D,
-	NEQ_i16 = 0x3E,
 	NEQ_u32 = 0x3F,
-	NEQ_i32 = 0x40,
 	NEQ_u64 = 0x41, /* not equal to uint64_t */
-	NEQ_i64 = 0x42,
 	NEQ_f = 0x43,
 	NEQ_d = 0x44,
 
@@ -156,22 +148,22 @@ enum opcode {
 	XOR = 0x6F, /* logical xor on uint8_t */
 	NOT = 0x70, /* logical negation on uint8_t */
 
-	AND_u8 = 0x71, /* binary and on uint8_t */
-	AND_u16 = 0x72, /* binary and on uint16_t */
+	AND_u8 = 0x71, /* bitwise and on uint8_t */
+	AND_u16 = 0x72, /* bitwise and on uint16_t */
 	AND_u32 = 0x73,
 	AND_u64 = 0x74,
 
-	OR_u8 = 0x75, /* binary or */
+	OR_u8 = 0x75, /* bitwise or */
 	OR_u16 = 0x76,
 	OR_u32 = 0x77,
 	OR_u64 = 0x78,
 
-	XOR_u8 = 0x79, /* binary xor */
+	XOR_u8 = 0x79, /* bitwise xor */
 	XOR_u16 = 0x7A,
 	XOR_u32 = 0x7B,
 	XOR_u64 = 0x7C,
 
-	NOT_u8 = 0x7D, /* binary negation */
+	NOT_u8 = 0x7D, /* bitwise negation */
 	NOT_u16 = 0x7E,
 	NOT_u32 = 0x7F,
 	NOT_u64 = 0x80,
