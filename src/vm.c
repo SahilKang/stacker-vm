@@ -670,6 +670,21 @@ int run_vm(VM *vm, uint8_t *code, size_t pc)
 			REL_f(vm, >=);
 		} else if (opcode == GTEQ_d) {
 			REL_d(vm, >=);
+		} else if (opcode == AND) {
+			REL_u8(vm, &&);
+		} else if (opcode == OR) {
+			REL_u8(vm, ||);
+		} else if (opcode == XOR) {
+			uint8_t b = POP(vm);
+			uint8_t a = POP(vm);
+			uint8_t ret = (a || b) && !(a && b) ? 1 : 0;
+
+			PUSH(vm, ret);
+		} else if (opcode == NOT) {
+			uint8_t a = POP(vm);
+			uint8_t ret = a ? 0 : 1;
+
+			PUSH(vm, ret);
 		}
 	}
 }
