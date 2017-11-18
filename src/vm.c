@@ -685,6 +685,104 @@ int run_vm(VM *vm, uint8_t *code, size_t pc)
 			uint8_t ret = a ? 0 : 1;
 
 			PUSH(vm, ret);
+		} else if (opcode == AND_u8) {
+			BINARY_u8(vm, &);
+		} else if (opcode == AND_u16) {
+			BINARY_u16(vm, &);
+		} else if (opcode == AND_u32) {
+			BINARY_u32(vm, &);
+		} else if (opcode == AND_u64) {
+			BINARY_u64(vm, &);
+		} else if (opcode == OR_u8) {
+			BINARY_u8(vm, |);
+		} else if (opcode == OR_u16) {
+			BINARY_u16(vm, |);
+		} else if (opcode == OR_u32) {
+			BINARY_u32(vm, |);
+		} else if (opcode == OR_u64) {
+			BINARY_u64(vm, |);
+		} else if (opcode == XOR_u8) {
+			BINARY_u8(vm, ^);
+		} else if (opcode == XOR_u16) {
+			BINARY_u16(vm, ^);
+		} else if (opcode == XOR_u32) {
+			BINARY_u32(vm, ^);
+		} else if (opcode == XOR_u64) {
+			BINARY_u64(vm, ^);
+		} else if (opcode == NOT_u8) {
+			uint8_t a = POP(vm);
+			uint8_t ret = ~a;
+
+			PUSH(vm, ret);
+		} else if (opcode == NOT_u16) {
+			uint16_t a, buf, ret;
+
+			POP_16(vm, a, buf);
+			ret = ~a;
+
+			PUSH_16(vm, ret);
+		} else if (opcode == NOT_u32) {
+			uint32_t a, buf, ret;
+
+			POP_32(vm, a, buf);
+			ret = ~a;
+
+			PUSH_32(vm, ret);
+		} else if (opcode == NOT_u64) {
+			uint64_t a, buf, ret;
+
+			POP_64(vm, a, buf);
+			ret = ~a;
+
+			PUSH_64(vm, ret);
+		} else if (opcode == LSHFT_u8) {
+			uint8_t b = POP(vm);
+			uint8_t a = POP(vm);
+			uint8_t ret = a << b;
+
+			PUSH(vm, ret);
+		} else if (opcode == LSHFT_u16) {
+			uint8_t b = POP(vm);
+			uint16_t a = POP(vm);
+			uint16_t ret = a << b;
+
+			PUSH_16(vm, ret);
+		} else if (opcode == LSHFT_u32) {
+			uint8_t b = POP(vm);
+			uint32_t a = POP(vm);
+			uint32_t ret = a << b;
+
+			PUSH_32(vm, ret);
+		} else if (opcode == LSHFT_u64) {
+			uint8_t b = POP(vm);
+			uint64_t a = POP(vm);
+			uint64_t ret = a << b;
+
+			PUSH_64(vm, ret);
+		} else if (opcode == RSHFT_u8) {
+			uint8_t b = POP(vm);
+			uint8_t a = POP(vm);
+			uint8_t ret = a >> b;
+
+			PUSH(vm, ret);
+		} else if (opcode == RSHFT_u16) {
+			uint8_t b = POP(vm);
+			uint16_t a = POP(vm);
+			uint16_t ret = a >> b;
+
+			PUSH_16(vm, ret);
+		} else if (opcode == RSHFT_u32) {
+			uint8_t b = POP(vm);
+			uint32_t a = POP(vm);
+			uint32_t ret = a >> b;
+
+			PUSH_32(vm, ret);
+		} else if (opcode == RSHFT_u64) {
+			uint8_t b = POP(vm);
+			uint64_t a = POP(vm);
+			uint64_t ret = a >> b;
+
+			PUSH_64(vm, ret);
 		}
 	}
 }

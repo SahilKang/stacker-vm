@@ -170,8 +170,8 @@ enum opcode {
 
 	LSHFT_u8 = 0x81, /* left-shift uint8_t */
 	LSHFT_u16 = 0x82,
-	LSFHT_u32 = 0x83,
-	LSFHT_u64 = 0x84,
+	LSHFT_u32 = 0x83,
+	LSHFT_u64 = 0x84,
 
 	RSHFT_u8 = 0x85, /* right-shift uint8_t */
 	RSHFT_u16 = 0x86,
