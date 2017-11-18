@@ -826,6 +826,25 @@ int run_vm(VM *vm, uint8_t *code, size_t pc)
 			POP_64(vm, a, buf);
 
 			if (b) vm->pc = a;
+		} else if (opcode == PUSH_u8) {
+			PUSH(vm, GETCODE(vm));
+		} else if (opcode == PUSH_u16) {
+			size_t i;
+			for (i=0; i<2; ++i) PUSH(vm, GETCODE(vm));
+		} else if (opcode == PUSH_u32) {
+			size_t i;
+			for (i=0; i<4; ++i) PUSH(vm, GETCODE(vm));
+		} else if (opcode == PUSH_u64) {
+			size_t i;
+			for (i=0; i<8; ++i) PUSH(vm, GETCODE(vm));
+		} else if (opcode == POP_u8) {
+			--vm->sp;
+		} else if (opcode == POP_u16) {
+			vm->sp -= 2;
+		} else if (opcode == POP_u32) {
+			vm->sp -= 4;
+		} else if (opcode == POP_u64) {
+			vm->sp -= 8;
 		}
 	}
 }
