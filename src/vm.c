@@ -889,6 +889,101 @@ int run_vm(VM *vm, uint8_t *code, size_t pc)
 			val = POP(vm);
 
 			vm->env[addr] = val;
+		} else if (opcode == CALL_u8) {
+			/* we expect a uint8_t as the first arg: argc */
+			uint8_t addr = POP(vm);
+
+			PUSH_64(vm, vm->pc);
+			PUSH_64(vm, vm->fp);
+
+			vm->fp = vm->sp;
+			vm->pc = addr;
+		} else if (opcode == CALL_u16) {
+			uint16_t addr, buf;
+			POP_16(vm, addr, buf);
+
+			PUSH_64(vm, vm->pc);
+			PUSH_64(vm, vm->fp);
+
+			vm->fp = vm->sp;
+			vm->pc = addr;
+		} else if (opcode == CALL_u32) {
+			uint32_t addr, buf;
+			POP_32(vm, addr, buf);
+
+			PUSH_64(vm, vm->pc);
+			PUSH_64(vm, vm->fp);
+
+			vm->fp = vm->sp;
+			vm->pc = addr;
+		} else if (opcode == CALL_u64) {
+			uint64_t addr, buf;
+			POP_64(vm, addr, buf);
+
+			PUSH_64(vm, vm->pc);
+			PUSH_64(vm, vm->fp);
+
+			vm->fp = vm->sp;
+			vm->pc = addr;
+		} else if (opcode == RET_u8) {
+			uint8_t val, argc;
+			uint64_t buf;
+
+			val = POP(vm);
+
+			vm->sp = vm->fp;
+			POP_64(vm, vm->fp, buf);
+			POP_64(vm, vm->pc, buf);
+
+			argc = POP(vm);
+			vm->sp -= argc;
+
+			PUSH(vm, val);
+		} else if (opcode == RET_u16) {
+			uint8_t argc;
+			uint16_t val;
+			uint64_t buf;
+
+			POP_16(vm, val, buf);
+
+			vm->sp = vm->fp;
+			POP_64(vm, vm->fp, buf);
+			POP_64(vm, vm->pc, buf);
+
+			argc = POP(vm);
+			vm->sp -= argc;
+
+			PUSH(vm, val);
+		} else if (opcode == RET_u32) {
+			uint8_t argc;
+			uint32_t val;
+			uint64_t buf;
+
+			POP_32(vm, val, buf);
+
+			vm->sp = vm->fp;
+			POP_64(vm, vm->fp, buf);
+			POP_64(vm, vm->pc, buf);
+
+			argc = POP(vm);
+			vm->sp -= argc;
+
+			PUSH(vm, val);
+		} else if (opcode == RET_u64) {
+			uint8_t argc;
+			uint64_t val;
+			uint64_t buf;
+
+			POP_64(vm, val, buf);
+
+			vm->sp = vm->fp;
+			POP_64(vm, vm->fp, buf);
+			POP_64(vm, vm->pc, buf);
+
+			argc = POP(vm);
+			vm->sp -= argc;
+
+			PUSH(vm, val);
 		}
 	}
 }
