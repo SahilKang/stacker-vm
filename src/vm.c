@@ -845,6 +845,50 @@ int run_vm(VM *vm, uint8_t *code, size_t pc)
 			vm->sp -= 4;
 		} else if (opcode == POP_u64) {
 			vm->sp -= 8;
+		} else if (opcode == LOAD_u8) {
+			uint8_t a = POP(vm);
+			PUSH(vm, vm->env[a]);
+		} else if (opcode == LOAD_u16) {
+			uint16_t a, buf;
+			POP_16(vm, a, buf);
+			PUSH(vm, vm->env[a]);
+		} else if (opcode == LOAD_u32) {
+			uint32_t a, buf;
+			POP_32(vm, a, buf);
+			PUSH(vm, vm->env[a]);
+		} else if (opcode == LOAD_u64) {
+			uint64_t a, buf;
+			POP_64(vm, a, buf);
+			PUSH(vm, vm->env[a]);
+		} else if (opcode == STORE_u8) {
+			uint8_t addr = POP(vm);
+			uint8_t val = POP(vm);
+
+			vm->env[addr] = val;
+		} else if (opcode == STORE_u16) {
+			uint8_t val;
+			uint16_t addr, buf;
+
+			POP_16(vm, addr, buf);
+			val = POP(vm);
+
+			vm->env[addr] = val;
+		} else if (opcode == STORE_u32) {
+			uint8_t val;
+			uint32_t addr, buf;
+
+			POP_32(vm, addr, buf);
+			val = POP(vm);
+
+			vm->env[addr] = val;
+		} else if (opcode == STORE_u64) {
+			uint8_t val;
+			uint64_t addr, buf;
+
+			POP_64(vm, addr, buf);
+			val = POP(vm);
+
+			vm->env[addr] = val;
 		}
 	}
 }
