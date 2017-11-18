@@ -783,6 +783,49 @@ int run_vm(VM *vm, uint8_t *code, size_t pc)
 			uint64_t ret = a >> b;
 
 			PUSH_64(vm, ret);
+		} else if (opcode == JMP_u8) {
+			uint8_t a = POP(vm);
+			vm->pc = a;
+		} else if (opcode == JMP_u16) {
+			uint16_t a, buf;
+			POP_16(vm, a, buf);
+			vm->pc = a;
+		} else if (opcode == JMP_u32) {
+			uint32_t a, buf;
+			POP_32(vm, a, buf);
+			vm->pc = a;
+		} else if (opcode == JMP_u64) {
+			uint64_t a, buf;
+			POP_64(vm, a, buf);
+			vm->pc = a;
+		} else if (opcode == JMPIF_u8) {
+			uint8_t b = POP(vm);
+			uint8_t a = POP(vm);
+			if (b) vm->pc = a;
+		} else if (opcode == JMPIF_u16) {
+			uint8_t b;
+			uint16_t a, buf;
+
+			b = POP(vm);
+			POP_16(vm, a, buf);
+
+			if (b) vm->pc = a;
+		} else if (opcode == JMPIF_u32) {
+			uint8_t b;
+			uint32_t a, buf;
+
+			b = POP(vm);
+			POP_32(vm, a, buf);
+
+			if (b) vm->pc = a;
+		} else if (opcode == JMPIF_u64) {
+			uint8_t b;
+			uint64_t a, buf;
+
+			b = POP(vm);
+			POP_64(vm, a, buf);
+
+			if (b) vm->pc = a;
 		}
 	}
 }
