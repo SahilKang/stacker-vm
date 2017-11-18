@@ -223,14 +223,7 @@ enum opcode {
 
 	HALT = 0xAB,
 
-	PRINT_u8 = 0xAC,
-	PRINT_i8 = 0xAD,
-	PRINT_u16 = 0xAE,
-	PRINT_i16 = 0xAF,
-	PRINT_u32 = 0xB0,
-	PRINT_i32 = 0xB1,
-	PRINT_u64 = 0xB2,
-	PRINT_i64 = 0xB3
+	SYSCALL = 0xAC
 };
 
 #endif

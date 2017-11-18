@@ -17,9 +17,13 @@
  * along with stacker-vm.  If not, see <http://www.gnu.org/licenses/>.
  *****************************************************************************/
 
+#define _GNU_SOURCE
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <sys/syscall.h>
 #include <vm.h>
+
 
 #define PUSH(vm, v) (vm)->stack[(vm)->sp++] = (v) /* push v onto data stack */
 #define POP(vm) (vm)->stack[--(vm)->sp] /* pop from data stack */
@@ -991,6 +995,61 @@ int run_vm(VM *vm, uint8_t *code, size_t pc)
 			uint8_t arg_num = POP(vm);
 			uint8_t arg = vm->stack[vm->fp - 64*2 - 1 - arg_num];
 			PUSH(vm, arg);
+		} else if (opcode == HALT) {
+			return 0;
+		} else if (opcode == SYSCALL) {
+			uint64_t syscall_num, ret, buf;
+			uint64_t args[5];
+			size_t i;
+
+			uint8_t argc = POP(vm);
+
+			switch (argc) {
+			case 0:
+				syscall_num = POP(vm);
+
+				ret = syscall(syscall_num);
+				PUSH_64(vm, ret);
+				break;
+			case 1:
+				POP_64(vm, args[0], buf);
+				syscall_num = POP(vm);
+
+				ret = syscall(syscall_num, args[0]);
+				PUSH_64(vm, ret);
+				break;
+			case 2:
+				for (i=0;i<argc; ++i) POP_64(vm, args[i], buf);
+				syscall_num = POP(vm);
+
+				ret = syscall(syscall_num, args[0], args[1]);
+				PUSH_64(vm, ret);
+				break;
+			case 3:
+				for (i=0;i<argc; ++i) POP_64(vm, args[i], buf);
+				syscall_num = POP(vm);
+
+				ret = syscall(syscall_num, args[0], args[1],
+					args[2]);
+				PUSH_64(vm, ret);
+				break;
+			case 4:
+				for (i=0;i<argc; ++i) POP_64(vm, args[i], buf);
+				syscall_num = POP(vm);
+
+				ret = syscall(syscall_num, args[0], args[1],
+					args[2], args[3]);
+				PUSH_64(vm, ret);
+				break;
+			case 5:
+				for (i=0;i<argc; ++i) POP_64(vm, args[i], buf);
+				syscall_num = POP(vm);
+
+				ret = syscall(syscall_num, args[0], args[1],
+					args[2], args[3], args[4]);
+				PUSH_64(vm, ret);
+				break;
+			}
 		}
 	}
 }
