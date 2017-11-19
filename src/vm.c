@@ -805,31 +805,31 @@ int run_vm(VM *vm, uint8_t *code, size_t pc)
 		} else if (opcode == JMPIF_u8) {
 			uint8_t b = POP(vm);
 			uint8_t a = POP(vm);
-			if (b) vm->pc = a;
+			if (a) vm->pc = b;
 		} else if (opcode == JMPIF_u16) {
-			uint8_t b;
-			uint16_t a, buf;
+			uint8_t a;
+			uint16_t b, buf;
 
-			b = POP(vm);
-			POP_16(vm, a, buf);
+			POP_16(vm, b, buf);
+			a = POP(vm);
 
-			if (b) vm->pc = a;
+			if (a) vm->pc = b;
 		} else if (opcode == JMPIF_u32) {
-			uint8_t b;
-			uint32_t a, buf;
+			uint8_t a;
+			uint32_t b, buf;
 
-			b = POP(vm);
-			POP_32(vm, a, buf);
+			POP_32(vm, b, buf);
+			a = POP(vm);
 
-			if (b) vm->pc = a;
+			if (a) vm->pc = b;
 		} else if (opcode == JMPIF_u64) {
-			uint8_t b;
-			uint64_t a, buf;
+			uint8_t a;
+			uint64_t b, buf;
 
-			b = POP(vm);
-			POP_64(vm, a, buf);
+			POP_64(vm, b, buf);
+			a = POP(vm);
 
-			if (b) vm->pc = a;
+			if (a) vm->pc = b;
 		} else if (opcode == PUSH_u8) {
 			PUSH(vm, GETCODE(vm));
 		} else if (opcode == PUSH_u16) {
